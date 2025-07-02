@@ -1,7 +1,7 @@
 {
   "name": "@huefy-dev/react",
-  "version": "1.0.0-beta.4",
-  "description": "React SDK for Huefy email sending platform with hooks and components",
+  "version": "1.0.0-beta.8",
+  "description": "React SDK for Huefy - App Mail Templates with hooks and components for dynamic email sending",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
   "types": "dist/index.d.ts",
@@ -37,7 +37,7 @@
   ],
   "author": "Huefy <hello@huefy.dev>",
   "license": "MIT",
-  "homepage": "https://docs.huefy.dev/sdk/react",
+  "homepage": "https://www.huefy.dev",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/huefy/huefy-sdk.git",
@@ -75,7 +75,7 @@
     "typescript": "^5.3.3"
   },
   "dependencies": {
-    "@huefy-dev/sdk": "1.0.0-beta.3"
+    "@huefy-dev/sdk": "1.0.0-beta.8"
   },
   "peerDependencies": {
     "react": ">=16.8.0",

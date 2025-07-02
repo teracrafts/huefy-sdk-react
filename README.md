@@ -1,15 +1,15 @@
 # Huefy React SDK
 
-The official React SDK for the Huefy email sending platform. Provides React hooks, context providers, and components for seamless email integration in React applications.
+The official React SDK for Huefy - App Mail Templates. Provides React hooks, context providers, and components for seamless template-based email integration in React applications.
 
 ## Installation
 
 Install the SDK using npm or yarn:
 
 ```bash
-npm install @huefy-dev/react@beta
+npm install @huefy-dev/react
 # or
-yarn add @huefy-dev/react@beta
+yarn add @huefy-dev/react
 ```
 
 ## Quick Start
