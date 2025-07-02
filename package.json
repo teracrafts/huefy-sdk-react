@@ -1,6 +1,6 @@
 {
   "name": "@huefy-dev/react",
-  "version": "1.0.0-beta.1",
+  "version": "1.0.0-beta.2",
   "description": "React SDK for Huefy email sending platform with hooks and components",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
@@ -75,7 +75,7 @@
     "typescript": "^5.3.3"
   },
   "dependencies": {
-    "@huefy-dev/sdk": "1.0.0-beta.1"
+    "@huefy-dev/sdk": "1.0.0-beta.2"
   },
   "peerDependencies": {
     "react": ">=16.8.0",

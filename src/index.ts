@@ -73,7 +73,7 @@ export {
 /**
  * Package version
  */
-export const VERSION = '1.0.0-beta.1';
+export const VERSION = '1.0.0-beta.2';
 
 /**
  * Package information
