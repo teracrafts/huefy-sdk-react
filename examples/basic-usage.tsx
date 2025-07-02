@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import { HuefyProvider, useHuefy, EmailProvider } from '@huefy/react-sdk';
+import { HuefyProvider, useHuefy, EmailProvider } from '@huefy-dev/react';
 
 /**
  * React example demonstrating the Huefy React SDK.

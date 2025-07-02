@@ -7,9 +7,9 @@ The official React SDK for the Huefy email sending platform. Provides React hook
 Install the SDK using npm or yarn:
 
 ```bash
-npm install @huefy/react-sdk
+npm install @huefy-dev/react@beta
 # or
-yarn add @huefy/react-sdk
+yarn add @huefy-dev/react@beta
 ```
 
 ## Quick Start
@@ -20,7 +20,7 @@ Wrap your app with the `HuefyProvider`:
 
 ```tsx
 import React from 'react';
-import { HuefyProvider } from '@huefy/react-sdk';
+import { HuefyProvider } from '@huefy-dev/react';
 import App from './App';
 
 function Root() {
@@ -40,7 +40,7 @@ Use the `useHuefy` hook in your components:
 
 ```tsx
 import React, { useState } from 'react';
-import { useHuefy, EmailProvider } from '@huefy/react-sdk';
+import { useHuefy, EmailProvider } from '@huefy-dev/react';
 
 function WelcomeEmailForm() {
   const [email, setEmail] = useState('');
@@ -208,7 +208,7 @@ enum EmailProvider {
 
 ```tsx
 import React, { useState } from 'react';
-import { useHuefy, EmailProvider } from '@huefy/react-sdk';
+import { useHuefy, EmailProvider } from '@huefy-dev/react';
 
 function ContactForm() {
   const [formData, setFormData] = useState({
@@ -275,7 +275,7 @@ function ContactForm() {
 
 ```tsx
 import React, { useState } from 'react';
-import { useHuefy } from '@huefy/react-sdk';
+import { useHuefy } from '@huefy-dev/react';
 
 function NewsletterSender() {
   const [subscribers] = useState([
@@ -322,7 +322,7 @@ function NewsletterSender() {
 
 ```tsx
 import React, { useEffect, useState } from 'react';
-import { useHuefy } from '@huefy/react-sdk';
+import { useHuefy } from '@huefy-dev/react';
 
 function ApiHealthStatus() {
   const [healthData, setHealthData] = useState(null);
@@ -363,7 +363,7 @@ function ApiHealthStatus() {
 
 ```tsx
 import React, { useState } from 'react';
-import { useHuefy, EmailProvider } from '@huefy/react-sdk';
+import { useHuefy, EmailProvider } from '@huefy-dev/react';
 
 interface FormErrors {
   name?: string;
@@ -478,7 +478,7 @@ function UserRegistrationForm() {
 The SDK provides comprehensive error handling:
 
 ```tsx
-import { useHuefy } from '@huefy/react-sdk';
+import { useHuefy } from '@huefy-dev/react';
 
 function EmailComponent() {
   const { sendEmail, error } = useHuefy({
@@ -521,7 +521,7 @@ import {
   HealthResponse,
   HuefyConfig,
   UseHuefyOptions
-} from '@huefy/react-sdk';
+} from '@huefy-dev/react';
 ```
 
 ## Testing
@@ -530,12 +530,12 @@ The SDK includes comprehensive testing utilities:
 
 ```tsx
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { HuefyProvider } from '@huefy/react-sdk';
+import { HuefyProvider } from '@huefy-dev/react';
 import YourComponent from './YourComponent';
 
 // Mock the Huefy client for testing
-jest.mock('@huefy/react-sdk', () => ({
-  ...jest.requireActual('@huefy/react-sdk'),
+jest.mock('@huefy-dev/react', () => ({
+  ...jest.requireActual('@huefy-dev/react'),
   useHuefy: () => ({
     sendEmail: jest.fn().mockResolvedValue({ messageId: 'test-123' }),
     loading: false,
