@@ -1,5 +1,5 @@
 {
-  "name": "@huefy/react",
+  "name": "@huefy-dev/react",
   "version": "1.0.0-beta.1",
   "description": "React SDK for Huefy email sending platform with hooks and components",
   "main": "dist/index.js",
