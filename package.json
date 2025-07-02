@@ -35,9 +35,9 @@
     "mailgun",
     "mailchimp"
   ],
-  "author": "Huefy <support@huefy.com>",
+  "author": "Huefy <hello@huefy.dev>",
   "license": "MIT",
-  "homepage": "https://github.com/huefy/huefy-sdk#readme",
+  "homepage": "https://docs.huefy.dev/sdk/react",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/huefy/huefy-sdk.git",
