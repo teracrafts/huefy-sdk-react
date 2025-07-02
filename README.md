@@ -7,9 +7,9 @@ The official React SDK for Huefy - App Mail Templates. Provides React hooks, con
 Install the SDK using npm or yarn:
 
 ```bash
-npm install @huefy-dev/react
+npm install @teracrafts/huefy-react
 # or
-yarn add @huefy-dev/react
+yarn add @teracrafts/huefy-react
 ```
 
 ## Quick Start
@@ -20,7 +20,7 @@ Wrap your app with the `HuefyProvider`:
 
 ```tsx
 import React from 'react';
-import { HuefyProvider } from '@huefy-dev/react';
+import { HuefyProvider } from '@teracrafts/huefy-react';
 import App from './App';
 
 function Root() {
@@ -40,7 +40,7 @@ Use the `useHuefy` hook in your components:
 
 ```tsx
 import React, { useState } from 'react';
-import { useHuefy, EmailProvider } from '@huefy-dev/react';
+import { useHuefy, EmailProvider } from '@teracrafts/huefy-react';
 
 function WelcomeEmailForm() {
   const [email, setEmail] = useState('');
@@ -208,7 +208,7 @@ enum EmailProvider {
 
 ```tsx
 import React, { useState } from 'react';
-import { useHuefy, EmailProvider } from '@huefy-dev/react';
+import { useHuefy, EmailProvider } from '@teracrafts/huefy-react';
 
 function ContactForm() {
   const [formData, setFormData] = useState({
@@ -275,7 +275,7 @@ function ContactForm() {
 
 ```tsx
 import React, { useState } from 'react';
-import { useHuefy } from '@huefy-dev/react';
+import { useHuefy } from '@teracrafts/huefy-react';
 
 function NewsletterSender() {
   const [subscribers] = useState([
@@ -322,7 +322,7 @@ function NewsletterSender() {
 
 ```tsx
 import React, { useEffect, useState } from 'react';
-import { useHuefy } from '@huefy-dev/react';
+import { useHuefy } from '@teracrafts/huefy-react';
 
 function ApiHealthStatus() {
   const [healthData, setHealthData] = useState(null);
@@ -363,7 +363,7 @@ function ApiHealthStatus() {
 
 ```tsx
 import React, { useState } from 'react';
-import { useHuefy, EmailProvider } from '@huefy-dev/react';
+import { useHuefy, EmailProvider } from '@teracrafts/huefy-react';
 
 interface FormErrors {
   name?: string;
@@ -478,7 +478,7 @@ function UserRegistrationForm() {
 The SDK provides comprehensive error handling:
 
 ```tsx
-import { useHuefy } from '@huefy-dev/react';
+import { useHuefy } from '@teracrafts/huefy-react';
 
 function EmailComponent() {
   const { sendEmail, error } = useHuefy({
@@ -521,7 +521,7 @@ import {
   HealthResponse,
   HuefyConfig,
   UseHuefyOptions
-} from '@huefy-dev/react';
+} from '@teracrafts/huefy-react';
 ```
 
 ## Testing
@@ -530,7 +530,7 @@ The SDK includes comprehensive testing utilities:
 
 ```tsx
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import { HuefyProvider } from '@huefy-dev/react';
+import { HuefyProvider } from '@teracrafts/huefy-react';
 import YourComponent from './YourComponent';
 
 // Mock the Huefy client for testing
