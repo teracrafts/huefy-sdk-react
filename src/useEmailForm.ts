@@ -4,7 +4,7 @@
  */
 
 import { useState, useCallback, useMemo } from 'react';
-import type { EmailData, SendEmailOptions } from '@huefy/sdk';
+import type { EmailData, SendEmailOptions } from '@huefy-dev/sdk';
 import { useHuefy } from './useHuefy.js';
 import type { 
   UseEmailFormOptions, 

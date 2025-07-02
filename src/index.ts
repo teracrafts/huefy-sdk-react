@@ -49,7 +49,7 @@ export type {
   RetryConfig,
   HttpResponse,
   HuefyEventCallbacks,
-} from '@huefy/sdk';
+} from '@huefy-dev/sdk';
 
 // Re-export error classes from the base SDK
 export {
@@ -68,7 +68,7 @@ export {
   isHuefyError,
   isErrorCode,
   isRetryableError,
-} from '@huefy/sdk';
+} from '@huefy-dev/sdk';
 
 /**
  * Package version
@@ -79,10 +79,10 @@ export const VERSION = '1.0.0-beta.1';
  * Package information
  */
 export const SDK_INFO = {
-  name: '@huefy/react',
+  name: '@huefy-dev/react',
   version: VERSION,
   language: 'React/TypeScript',
-  baseSDK: '@huefy/sdk',
+  baseSDK: '@huefy-dev/sdk',
   repository: 'https://github.com/huefy/huefy-sdk',
   documentation: 'https://docs.huefy.com/sdk/react',
 } as const;

@@ -4,7 +4,7 @@
  */
 
 import React, { createContext, useContext, useMemo, useRef } from 'react';
-import { HuefyClient } from '@huefy/sdk';
+import { HuefyClient } from '@huefy-dev/sdk';
 import type { HuefyContextValue, HuefyProviderConfig } from './types.js';
 
 /**
