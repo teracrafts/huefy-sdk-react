@@ -534,8 +534,8 @@ import { HuefyProvider } from '@teracrafts/huefy-react';
 import YourComponent from './YourComponent';
 
 // Mock the Huefy client for testing
-jest.mock('@huefy-dev/react', () => ({
-  ...jest.requireActual('@huefy-dev/react'),
+jest.mock('@teracrafts/huefy-react', () => ({
+  ...jest.requireActual('@teracrafts/huefy-react'),
   useHuefy: () => ({
     sendEmail: jest.fn().mockResolvedValue({ messageId: 'test-123' }),
     loading: false,
@@ -609,7 +609,7 @@ This SDK is released under the MIT License. See [LICENSE](../../LICENSE) for det
 
 ## Support
 
-- **Documentation**: [https://docs.huefy.com/react](https://docs.huefy.com/react)
+- **Documentation**: [https://docs.huefy.dev/sdk/react](https://docs.huefy.dev/sdk/react)
 - **Examples**: [./examples/](./examples/)
-- **Issues**: [GitHub Issues](https://github.com/huefy/huefy-sdk/issues)
-- **Email**: [support@huefy.com](mailto:support@huefy.com)
+- **Issues**: [GitHub Issues](https://github.com/teracrafts/huefy-sdk-react/issues)
+- **Email**: [hello@huefy.dev](mailto:hello@huefy.dev)
