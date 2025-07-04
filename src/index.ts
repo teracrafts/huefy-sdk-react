@@ -49,7 +49,7 @@ export type {
   RetryConfig,
   HttpResponse,
   HuefyEventCallbacks,
-} from '@teracrafts/huefy';
+} from '@teracrafts/huefy-sdk-js';
 
 // Re-export error classes from the base SDK
 export {
@@ -68,21 +68,21 @@ export {
   isHuefyError,
   isErrorCode,
   isRetryableError,
-} from '@teracrafts/huefy';
+} from '@teracrafts/huefy-sdk-js';
 
 /**
  * Package version
  */
-export const VERSION = '1.0.0-beta.9';
+export const VERSION = '2.0.0';
 
 /**
  * Package information
  */
 export const SDK_INFO = {
-  name: '@teracrafts/huefy-react',
+  name: '@teracrafts/huefy-sdk-react',
   version: VERSION,
   language: 'React/TypeScript',
-  baseSDK: '@teracrafts/huefy',
-  repository: 'https://github.com/teracrafts/huefy-sdk',
+  baseSDK: '@teracrafts/huefy-sdk-js',
+  repository: 'https://github.com/teracrafts/huefy-sdk-react',
   documentation: 'https://docs.huefy.com/sdk/react',
 } as const;

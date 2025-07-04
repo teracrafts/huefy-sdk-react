@@ -4,7 +4,7 @@
  */
 
 import React, { createContext, useContext, useMemo, useRef } from 'react';
-import { HuefyClient } from '@teracrafts/huefy';
+import { HuefyClient } from '@teracrafts/huefy-sdk-js';
 import type { HuefyContextValue, HuefyProviderConfig } from './types.js';
 
 /**

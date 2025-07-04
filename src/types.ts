@@ -9,7 +9,7 @@ import type {
   SendEmailOptions,
   SendEmailResponse,
   HuefyError,
-} from '@teracrafts/huefy';
+} from '@teracrafts/huefy-sdk-js';
 
 /**
  * Configuration for the Huefy React Provider

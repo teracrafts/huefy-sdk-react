@@ -4,7 +4,7 @@
  */
 
 import { useState, useCallback, useRef, useEffect } from 'react';
-import type { HuefyError, EmailData, SendEmailOptions, SendEmailResponse } from '@teracrafts/huefy';
+import type { HuefyError, EmailData, SendEmailOptions, SendEmailResponse } from '@teracrafts/huefy-sdk-js';
 import { useHuefyContext } from './context.js';
 import type { UseHuefyOptions, UseHuefyResult, EmailSendState } from './types.js';
 

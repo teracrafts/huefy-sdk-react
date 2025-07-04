@@ -1,6 +1,6 @@
 {
-  "name": "@teracrafts/huefy-react",
-  "version": "1.0.0",
+  "name": "@teracrafts/huefy-sdk-react",
+  "version": "2.0.0",
   "description": "React SDK for Huefy - App Mail Templates with hooks and components for dynamic email sending",
   "main": "dist/index.js",
   "module": "dist/index.esm.js",
@@ -73,7 +73,7 @@
     "typescript": "^5.3.3"
   },
   "dependencies": {
-    "@teracrafts/huefy": "1.0.0-beta.10"
+    "@teracrafts/huefy-sdk-js": "^2.0.0"
   },
   "peerDependencies": {
     "react": ">=16.8.0",
