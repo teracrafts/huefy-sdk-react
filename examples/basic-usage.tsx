@@ -18,7 +18,7 @@ function App() {
         <HuefyProvider 
             apiKey={process.env.REACT_APP_HUEFY_API_KEY || 'your-api-key'}
             config={{
-                baseUrl: 'https://api.huefy.com',
+                baseUrl: 'https://api.huefy.dev',
                 timeout: 30000,
                 retryOptions: {
                     maxRetries: 3,

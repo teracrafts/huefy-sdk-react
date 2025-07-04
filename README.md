@@ -127,7 +127,6 @@ interface HuefyProviderProps {
 }
 
 interface HuefyConfig {
-  baseUrl?: string;
   timeout?: number;
   retryOptions?: {
     maxRetries?: number;
@@ -142,7 +141,6 @@ interface HuefyConfig {
 <HuefyProvider 
   apiKey="your-api-key"
   config={{
-    baseUrl: 'https://api.huefy.com',
     timeout: 30000,
     retryOptions: {
       maxRetries: 3,
