@@ -84,5 +84,5 @@ export const SDK_INFO = {
   language: 'React/TypeScript',
   baseSDK: '@teracrafts/huefy-sdk-js',
   repository: 'https://github.com/teracrafts/huefy-sdk-react',
-  documentation: 'https://docs.huefy.com/sdk/react',
+  documentation: 'https://docs.huefy.dev/sdk/react',
 } as const;

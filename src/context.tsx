@@ -16,8 +16,10 @@ const HuefyContext = createContext<HuefyContextValue | null>(null);
  * Props for the HuefyProvider component
  */
 export interface HuefyProviderProps {
+  /** Huefy API key */
+  apiKey?: string;
   /** Huefy configuration */
-  config: HuefyProviderConfig;
+  config?: HuefyProviderConfig;
   /** Child components */
   children: React.ReactNode;
 }
@@ -40,33 +42,40 @@ export interface HuefyProviderProps {
  * }
  * ```
  */
-export function HuefyProvider({ config, children }: HuefyProviderProps) {
+export function HuefyProvider({ apiKey, config, children }: HuefyProviderProps) {
   // Use ref to ensure client is only created once
   const clientRef = useRef<HuefyClient | null>(null);
 
   // Create client instance with memoization
   const contextValue = useMemo<HuefyContextValue>(() => {
+    // Resolve configuration - support both apiKey prop and config object
+    const resolvedConfig: HuefyProviderConfig = config || { apiKey: apiKey! };
+    
+    if (!resolvedConfig.apiKey) {
+      throw new Error('HuefyProvider requires either apiKey prop or config.apiKey');
+    }
+
     // Create client if it doesn't exist or config changed
     if (!clientRef.current) {
-      if (config.debug) {
+      if (resolvedConfig?.debug) {
         console.log('[Huefy] Creating new client with config:', {
-          baseUrl: config.baseUrl,
-          timeout: config.timeout,
-          retryAttempts: config.retryAttempts,
+          baseUrl: resolvedConfig.baseUrl,
+          timeout: resolvedConfig.timeout,
+          retryAttempts: resolvedConfig.retryAttempts,
         });
       }
 
-      clientRef.current = new HuefyClient(config, {
-        onSendStart: config.debug ? (request) => {
-          console.log('[Huefy] Starting email send:', request.template_key);
+      clientRef.current = new HuefyClient(resolvedConfig, {
+        onSendStart: resolvedConfig?.debug ? (request) => {
+          console.log('[Huefy] Starting email send:', request.templateKey);
         } : undefined,
-        onSendSuccess: config.debug ? (response) => {
-          console.log('[Huefy] Email sent successfully:', response.message_id);
+        onSendSuccess: resolvedConfig?.debug ? (response) => {
+          console.log('[Huefy] Email sent successfully:', response.messageId);
         } : undefined,
-        onSendError: config.debug ? (error) => {
+        onSendError: resolvedConfig?.debug ? (error) => {
           console.error('[Huefy] Email send failed:', error.message);
         } : undefined,
-        onRetry: config.debug ? (attempt, error) => {
+        onRetry: resolvedConfig?.debug ? (attempt, error) => {
           console.log(`[Huefy] Retry attempt ${attempt}:`, error.message);
         } : undefined,
       });
@@ -75,9 +84,9 @@ export function HuefyProvider({ config, children }: HuefyProviderProps) {
     return {
       client: clientRef.current,
       isReady: true,
-      config,
+      config: resolvedConfig,
     };
-  }, [config]);
+  }, [apiKey, config]);
 
   return (
     <HuefyContext.Provider value={contextValue}>

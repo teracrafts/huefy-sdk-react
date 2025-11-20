@@ -202,7 +202,7 @@ export function EmailForm({
             <input
               id={key}
               type="text"
-              value={value}
+              value={String(value)}
               onChange={(e) => handleDataChange(key, e.target.value)}
               placeholder={`Enter ${key}`}
               style={{

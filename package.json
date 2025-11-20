@@ -1,9 +1,9 @@
 {
   "name": "@teracrafts/huefy-sdk-react",
-  "version": "2.0.0",
+  "version": "2.1.1",
   "description": "React SDK for Huefy - App Mail Templates with hooks and components for dynamic email sending",
   "main": "dist/index.js",
-  "module": "dist/index.esm.js",
+  "module": "dist/index.mjs",
   "types": "dist/index.d.ts",
   "files": [
     "dist"
@@ -37,7 +37,7 @@
   ],
   "author": "Huefy <hello@huefy.dev>",
   "license": "MIT",
-  "homepage": "https://www.huefy.dev",
+  "homepage": "https://huefy.dev",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/teracrafts/huefy-sdk-react.git"
@@ -47,6 +47,9 @@
   },
   "engines": {
     "node": ">=16.0.0"
+  },
+  "dependencies": {
+    "@teracrafts/huefy-sdk-js": "^2.1.0"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^6.2.0",
@@ -71,9 +74,6 @@
     "ts-jest": "^29.1.1",
     "tsup": "^8.0.1",
     "typescript": "^5.3.3"
-  },
-  "dependencies": {
-    "@teracrafts/huefy-sdk-js": "^2.0.0"
   },
   "peerDependencies": {
     "react": ">=16.8.0",

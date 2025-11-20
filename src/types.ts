@@ -10,6 +10,7 @@ import type {
   SendEmailResponse,
   HuefyError,
 } from '@teracrafts/huefy-sdk-js';
+import type { HuefyClient } from '@teracrafts/huefy-sdk-js';
 
 /**
  * Configuration for the Huefy React Provider
@@ -40,11 +41,11 @@ export interface EmailSendState {
  */
 export interface UseHuefyOptions {
   /** Called when an email is sent successfully */
-  onSuccess?: (response: SendEmailResponse) => void;
+  onSuccess?: ((response: SendEmailResponse) => void) | undefined;
   /** Called when an email send fails */
-  onError?: (error: HuefyError) => void;
+  onError?: ((error: HuefyError) => void) | undefined;
   /** Called when an email send operation starts */
-  onSending?: () => void;
+  onSending?: (() => void) | undefined;
   /** Reset state after successful send (default: true) */
   resetOnSuccess?: boolean;
   /** Reset state after error (default: false) */
@@ -97,7 +98,7 @@ export interface UseEmailFormOptions extends UseHuefyOptions {
   /** Default provider */
   defaultProvider?: SendEmailOptions['provider'];
   /** Validate form before sending */
-  validate?: (formData: EmailFormData) => string[] | null;
+  validate?: ((formData: EmailFormData) => string[] | null) | undefined;
 }
 
 /**
@@ -135,7 +136,7 @@ export interface UseEmailFormResult extends EmailSendState {
  */
 export interface HuefyContextValue {
   /** Huefy client instance */
-  client: import('@huefy/sdk').HuefyClient;
+  client: HuefyClient;
   /** Whether the provider is configured */
   isReady: boolean;
   /** Configuration used */
