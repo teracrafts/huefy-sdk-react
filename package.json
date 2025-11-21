@@ -1,6 +1,6 @@
 {
   "name": "@teracrafts/huefy-sdk-react",
-  "version": "2.1.1",
+  "version": "2.1.2",
   "description": "React SDK for Huefy - App Mail Templates with hooks and components for dynamic email sending",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
