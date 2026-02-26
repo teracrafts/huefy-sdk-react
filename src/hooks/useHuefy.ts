@@ -1,4 +1,5 @@
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import type { HuefyEmailClient } from '@teracrafts/huefy';
 import { useHuefyContext } from '../context';
 import type { UseHuefyOptions, UseHuefyResult } from '../types';
 
@@ -37,7 +38,7 @@ import type { UseHuefyOptions, UseHuefyResult } from '../types';
  * ```
  */
 export function useHuefy<T = unknown>(
-  actionFn: (client: NonNullable<ReturnType<typeof useHuefyContext>['client']>, ...args: unknown[]) => Promise<T>,
+  actionFn: (client: HuefyEmailClient, ...args: unknown[]) => Promise<T>,
   options: UseHuefyOptions = {},
 ): UseHuefyResult<T> {
   const { client, isReady } = useHuefyContext();
@@ -60,13 +61,13 @@ export function useHuefy<T = unknown>(
   actionFnRef.current = actionFn;
 
   // Set up unmount cleanup
-  useState(() => {
-    // This runs once on mount via the initializer function
+  useEffect(() => {
+    mountedRef.current = true;
     return () => {
       mountedRef.current = false;
       abortControllerRef.current?.abort();
     };
-  });
+  }, []);
 
   /**
    * Execute the action with optional arguments.
