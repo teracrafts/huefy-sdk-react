@@ -1,4 +1,4 @@
-import type { HuefyClient, HuefyConfig } from '@teracrafts/huefy';
+import type { HuefyEmailClient, HuefyConfig } from '@teracrafts/huefy';
 
 /**
  * Props for the HuefyProvider component.
@@ -19,7 +19,7 @@ export interface HuefyProviderProps {
  */
 export interface HuefyContextValue {
   /** The initialized Huefy client instance, or null if not yet ready. */
-  client: HuefyClient | null;
+  client: HuefyEmailClient | null;
   /** Whether the client has been successfully initialized. */
   isReady: boolean;
   /** Whether the client is currently initializing. */
