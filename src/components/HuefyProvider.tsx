@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { HuefyClient } from '@teracrafts/huefy';
+import { HuefyEmailClient } from '@teracrafts/huefy';
 import { getOrCreateContext } from '../context';
 import type { HuefyProviderProps } from '../types';
 
@@ -32,14 +32,14 @@ export function HuefyProvider({
 }: HuefyProviderProps) {
   const Context = getOrCreateContext();
 
-  const [client, setClient] = useState<HuefyClient | null>(null);
+  const [client, setClient] = useState<HuefyEmailClient | null>(null);
   const [isReady, setIsReady] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 
   // Prevent double initialization in React StrictMode
   const initRef = useRef(false);
-  const clientRef = useRef<HuefyClient | null>(null);
+  const clientRef = useRef<HuefyEmailClient | null>(null);
 
   // Stable reference to callbacks to avoid re-triggering effects
   const onReadyRef = useRef(onReady);
@@ -59,11 +59,11 @@ export function HuefyProvider({
     setError(null);
 
     try {
-      const newClient = new HuefyClient(config);
+      const newClient = new HuefyEmailClient(config);
 
       // If the client has an async initialization method, await it
-      if (typeof newClient.initialize === 'function') {
-        await newClient.initialize();
+      if ('initialize' in newClient && typeof (newClient as Record<string, unknown>).initialize === 'function') {
+        await (newClient as unknown as { initialize(): Promise<void> }).initialize();
       }
 
       clientRef.current = newClient;
