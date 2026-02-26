@@ -14,3 +14,18 @@ export type {
   UseHuefyOptions,
   UseHuefyResult,
 } from './types';
+
+// Email domain types
+export type {
+  EmailProvider,
+  EmailData,
+  SendEmailOptions,
+  SendEmailResponse,
+  EmailFormData,
+  UseEmailFormOptions,
+  UseEmailFormResult,
+  BulkEmailResult,
+} from './types/email';
+
+// Email form hook
+export { useEmailForm } from './hooks/useEmailForm';
