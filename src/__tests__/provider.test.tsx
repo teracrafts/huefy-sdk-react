@@ -7,7 +7,7 @@ import { useHuefyContext } from '../context';
 // Mock the SDK client
 vi.mock('@teracrafts/huefy', () => {
   return {
-    HuefyClient: vi.fn().mockImplementation((config: unknown) => ({
+    HuefyEmailClient: vi.fn().mockImplementation((config: unknown) => ({
       config,
       close: vi.fn(),
     })),
@@ -84,8 +84,8 @@ describe('HuefyProvider', () => {
   });
 
   it('should handle initialization errors', async () => {
-    const { HuefyClient } = await import('@teracrafts/huefy');
-    const MockClient = HuefyClient as unknown as ReturnType<typeof vi.fn>;
+    const { HuefyEmailClient } = await import('@teracrafts/huefy');
+    const MockClient = HuefyEmailClient as unknown as ReturnType<typeof vi.fn>;
     MockClient.mockImplementationOnce(() => {
       throw new Error('Init failed');
     });
@@ -109,8 +109,8 @@ describe('HuefyProvider', () => {
 
   it('should call client.close on unmount', async () => {
     const closeFn = vi.fn();
-    const { HuefyClient } = await import('@teracrafts/huefy');
-    const MockClient = HuefyClient as unknown as ReturnType<typeof vi.fn>;
+    const { HuefyEmailClient } = await import('@teracrafts/huefy');
+    const MockClient = HuefyEmailClient as unknown as ReturnType<typeof vi.fn>;
     MockClient.mockImplementation(() => ({
       close: closeFn,
     }));
