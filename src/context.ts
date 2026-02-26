@@ -9,33 +9,26 @@ import type { HuefyContextValue } from './types';
 const CONTEXT_KEY = '__HUEFY_REACT_CONTEXT__';
 
 /**
- * Default context value when no provider is present.
- */
-const defaultContextValue: HuefyContextValue = {
-  client: null,
-  isReady: false,
-  isLoading: false,
-  error: null,
-};
-
-/**
  * Gets or creates the Huefy React context using a global registry pattern.
  *
  * This ensures that even if multiple copies of the SDK are loaded (common in
  * monorepo setups with pnpm, yalc, or similar tools), they all share the same
  * React context instance.
  *
+ * The default value is `undefined` so that `useHuefyContext` can detect when
+ * a component is rendered outside of a HuefyProvider and throw an error.
+ *
  * @returns The shared React context for Huefy.
  */
-export function getOrCreateContext(): React.Context<HuefyContextValue> {
+export function getOrCreateContext(): React.Context<HuefyContextValue | undefined> {
   // Use globalThis for cross-environment compatibility (browser, Node, workers)
   const globalRegistry = globalThis as unknown as Record<
     string,
-    React.Context<HuefyContextValue> | undefined
+    React.Context<HuefyContextValue | undefined> | undefined
   >;
 
   if (!globalRegistry[CONTEXT_KEY]) {
-    globalRegistry[CONTEXT_KEY] = createContext<HuefyContextValue>(defaultContextValue);
+    globalRegistry[CONTEXT_KEY] = createContext<HuefyContextValue | undefined>(undefined);
     globalRegistry[CONTEXT_KEY]!.displayName = 'HuefyContext';
   }
 
