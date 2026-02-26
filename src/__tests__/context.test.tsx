@@ -47,15 +47,10 @@ describe('useHuefyContext', () => {
     delete globalRegistry[CONTEXT_KEY];
   });
 
-  it('should return default context value when no provider is present', () => {
-    const { result } = renderHook(() => useHuefyContext());
-
-    expect(result.current).toEqual({
-      client: null,
-      isReady: false,
-      isLoading: false,
-      error: null,
-    });
+  it('should throw when used outside of a HuefyProvider', () => {
+    expect(() => {
+      renderHook(() => useHuefyContext());
+    }).toThrow('useHuefyContext must be used within a HuefyProvider');
   });
 
   it('should return provided context value', () => {
