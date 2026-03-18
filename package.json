@@ -29,7 +29,8 @@
     "test:coverage": "vitest run --coverage",
     "typecheck": "tsc --noEmit",
     "clean": "rm -rf dist",
-    "prepublishOnly": "npm run build"
+    "prepublishOnly": "npm run build",
+    "lab": "npx tsx sdk-lab/run.ts"
   },
   "peerDependencies": {
     "react": ">=18.0.0",
