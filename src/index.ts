@@ -20,10 +20,15 @@ export type {
   EmailProvider,
   EmailData,
   SendEmailOptions,
+  RecipientStatus,
+  SendEmailResponseData,
   SendEmailResponse,
   EmailFormData,
   UseEmailFormOptions,
   UseEmailFormResult,
+  BulkRecipient,
+  SendBulkEmailsResponseData,
+  SendBulkEmailsResponse,
   BulkEmailResult,
 } from './types/email';
 
