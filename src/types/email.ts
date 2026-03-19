@@ -1,18 +1,33 @@
 export type EmailProvider = 'ses' | 'sendgrid' | 'mailgun' | 'mailchimp';
 
 export interface EmailData {
-  [key: string]: string;
+  [key: string]: unknown;
 }
 
 export interface SendEmailOptions {
   provider?: EmailProvider;
 }
 
+export interface RecipientStatus {
+  email: string;
+  status: string;
+  messageId?: string;
+  error?: string;
+  sentAt?: string | null;
+}
+
+export interface SendEmailResponseData {
+  emailId: string;
+  status: string;
+  recipients: RecipientStatus[];
+  scheduledAt?: string | null;
+  sentAt?: string | null;
+}
+
 export interface SendEmailResponse {
   success: boolean;
-  message: string;
-  messageId: string;
-  provider: EmailProvider;
+  data: SendEmailResponseData;
+  correlationId: string;
 }
 
 export interface EmailFormData {
@@ -47,9 +62,37 @@ export interface UseEmailFormResult {
   isValid: boolean;
 }
 
+export interface BulkRecipient {
+  email: string;
+  type?: 'to' | 'cc' | 'bcc';
+  data?: Record<string, unknown>;
+}
+
+export interface SendBulkEmailsResponseData {
+  batchId: string;
+  status: string;
+  templateKey: string;
+  totalRecipients: number;
+  processedCount: number;
+  successCount: number;
+  failureCount: number;
+  suppressedCount: number;
+  startedAt: string;
+  completedAt?: string | null;
+  recipients: RecipientStatus[];
+  errors?: Array<{ code: string; message: string; recipient?: string }>;
+  metadata?: Record<string, unknown>;
+}
+
+export interface SendBulkEmailsResponse {
+  success: boolean;
+  data: SendBulkEmailsResponseData;
+  correlationId: string;
+}
+
+// Legacy alias kept for backwards compatibility
 export interface BulkEmailResult {
   email: string;
   success: boolean;
-  result?: SendEmailResponse;
   error?: { message: string; code: string };
 }
