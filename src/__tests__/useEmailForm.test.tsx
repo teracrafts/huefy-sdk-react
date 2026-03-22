@@ -1,68 +1,270 @@
-import { describe, it, expect, vi } from 'vitest';
+import React from 'react';
 import { renderHook, act } from '@testing-library/react';
+import { describe, it, expect, vi, afterEach } from 'vitest';
+import { useEmailForm } from '../hooks/useEmailForm';
+import { getOrCreateContext } from '../context';
+import type { HuefyContextValue } from '../types';
+import type { SendEmailResponse } from '../types/email';
 
-// Mock basic validation
-describe('useEmailForm validation logic', () => {
-  const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const CONTEXT_KEY = '__HUEFY_REACT_CONTEXT__';
 
-  function defaultValidate(formData: { templateKey: string; data: Record<string, string>; recipient: string }) {
-    const errors: string[] = [];
-    if (!formData.templateKey || formData.templateKey.trim().length === 0) {
-      errors.push('Template key is required');
-    }
-    if (!formData.recipient || formData.recipient.trim().length === 0) {
-      errors.push('Recipient email is required');
-    } else if (!EMAIL_REGEX.test(formData.recipient.trim())) {
-      errors.push('Invalid email address');
-    }
-    if (!formData.data || Object.keys(formData.data).length === 0) {
-      errors.push('Template data is required');
-    }
-    return errors.length > 0 ? errors : null;
-  }
+const mockResponse: SendEmailResponse = {
+  success: true,
+  correlationId: 'corr-123',
+  data: {
+    emailId: 'email-1',
+    status: 'sent',
+    recipients: [{ email: 'john@example.com', status: 'delivered' }],
+  },
+};
 
-  it('validates valid form data', () => {
-    const result = defaultValidate({
-      templateKey: 'welcome',
-      data: { name: 'John' },
-      recipient: 'john@example.com',
-    });
-    expect(result).toBeNull();
+function createWrapper(contextValue: Partial<HuefyContextValue> = {}) {
+  const Context = getOrCreateContext();
+
+  const defaultValue: HuefyContextValue = {
+    client: {
+      sendEmail: vi.fn().mockResolvedValue(mockResponse),
+    } as unknown as HuefyContextValue['client'],
+    isReady: true,
+    isLoading: false,
+    error: null,
+    ...contextValue,
+  };
+
+  return function Wrapper({ children }: { children: React.ReactNode }) {
+    return <Context.Provider value={defaultValue}>{children}</Context.Provider>;
+  };
+}
+
+describe('useEmailForm', () => {
+  afterEach(() => {
+    vi.restoreAllMocks();
+    const globalRegistry = globalThis as unknown as Record<string, unknown>;
+    delete globalRegistry[CONTEXT_KEY];
   });
 
-  it('catches missing template key', () => {
-    const result = defaultValidate({
-      templateKey: '',
-      data: { name: 'John' },
-      recipient: 'john@example.com',
-    });
-    expect(result).toContain('Template key is required');
+  it('throws a clear error when used outside HuefyProvider', () => {
+    expect(() =>
+      renderHook(() => useEmailForm()),
+    ).toThrow('useHuefyContext must be used within a HuefyProvider');
   });
 
-  it('catches invalid email', () => {
-    const result = defaultValidate({
-      templateKey: 'welcome',
-      data: { name: 'John' },
-      recipient: 'bad-email',
-    });
-    expect(result).toContain('Invalid email address');
+  it('returns initial state within provider', () => {
+    const { result } = renderHook(
+      () => useEmailForm({ defaultTemplate: 'welcome', defaultRecipient: 'a@b.com' }),
+      { wrapper: createWrapper() },
+    );
+
+    expect(result.current.formData.templateKey).toBe('welcome');
+    expect(result.current.formData.recipient).toBe('a@b.com');
+    expect(result.current.loading).toBe(false);
+    expect(result.current.error).toBeNull();
+    expect(result.current.data).toBeNull();
+    expect(result.current.success).toBe(false);
   });
 
-  it('catches empty data', () => {
-    const result = defaultValidate({
-      templateKey: 'welcome',
-      data: {},
-      recipient: 'john@example.com',
+  it('reflects validation errors reactively', () => {
+    const { result } = renderHook(() => useEmailForm(), { wrapper: createWrapper() });
+
+    // Initial state: all fields empty — should have errors
+    expect(result.current.isValid).toBe(false);
+    expect(result.current.validationErrors.length).toBeGreaterThan(0);
+
+    act(() => {
+      result.current.setFormData({
+        templateKey: 'welcome',
+        recipient: 'john@example.com',
+        data: { name: 'John' },
+      });
     });
-    expect(result).toContain('Template data is required');
+
+    expect(result.current.isValid).toBe(true);
+    expect(result.current.validationErrors).toHaveLength(0);
   });
 
-  it('catches multiple errors', () => {
-    const result = defaultValidate({
-      templateKey: '',
-      data: {},
-      recipient: '',
+  it('sends email successfully and updates state', async () => {
+    const onSuccess = vi.fn();
+
+    const { result } = renderHook(
+      () =>
+        useEmailForm({
+          defaultTemplate: 'welcome',
+          defaultRecipient: 'john@example.com',
+          defaultData: { name: 'John' },
+          onSuccess,
+        }),
+      { wrapper: createWrapper() },
+    );
+
+    await act(async () => {
+      await result.current.sendEmail();
     });
-    expect(result!.length).toBeGreaterThanOrEqual(3);
+
+    expect(result.current.data).toEqual(mockResponse);
+    expect(result.current.success).toBe(true);
+    expect(result.current.loading).toBe(false);
+    expect(result.current.error).toBeNull();
+    expect(onSuccess).toHaveBeenCalledWith(mockResponse);
+  });
+
+  it('blocks send and sets error when client is not initialized', async () => {
+    const onError = vi.fn();
+
+    const { result } = renderHook(
+      () =>
+        useEmailForm({
+          defaultTemplate: 'welcome',
+          defaultRecipient: 'john@example.com',
+          defaultData: { name: 'John' },
+          onError,
+        }),
+      { wrapper: createWrapper({ client: null, isReady: false }) },
+    );
+
+    await act(async () => {
+      await result.current.sendEmail();
+    });
+
+    expect(result.current.error?.message).toContain('not initialized');
+    expect(result.current.success).toBe(false);
+    expect(onError).toHaveBeenCalled();
+  });
+
+  it('blocks send and sets error when form is invalid', async () => {
+    const onError = vi.fn();
+
+    const { result } = renderHook(
+      () => useEmailForm({ onError }), // no defaults — form is invalid
+      { wrapper: createWrapper() },
+    );
+
+    await act(async () => {
+      await result.current.sendEmail();
+    });
+
+    expect(result.current.error?.message).toContain('Validation failed');
+    expect(result.current.success).toBe(false);
+    expect(onError).toHaveBeenCalled();
+  });
+
+  it('handles send errors and calls onError', async () => {
+    const sendError = new Error('Network failure');
+    const onError = vi.fn();
+
+    const { result } = renderHook(
+      () =>
+        useEmailForm({
+          defaultTemplate: 'welcome',
+          defaultRecipient: 'john@example.com',
+          defaultData: { name: 'John' },
+          onError,
+        }),
+      {
+        wrapper: createWrapper({
+          client: {
+            sendEmail: vi.fn().mockRejectedValue(sendError),
+          } as unknown as HuefyContextValue['client'],
+        }),
+      },
+    );
+
+    await act(async () => {
+      await result.current.sendEmail();
+    });
+
+    expect(result.current.error).toEqual(sendError);
+    expect(result.current.success).toBe(false);
+    expect(result.current.loading).toBe(false);
+    expect(onError).toHaveBeenCalledWith(sendError);
+  });
+
+  it('calls onSending callback before sending', async () => {
+    const onSending = vi.fn();
+
+    const { result } = renderHook(
+      () =>
+        useEmailForm({
+          defaultTemplate: 'welcome',
+          defaultRecipient: 'john@example.com',
+          defaultData: { name: 'John' },
+          onSending,
+        }),
+      { wrapper: createWrapper() },
+    );
+
+    await act(async () => {
+      await result.current.sendEmail();
+    });
+
+    expect(onSending).toHaveBeenCalledTimes(1);
+  });
+
+  it('resets state to defaults', async () => {
+    const { result } = renderHook(
+      () =>
+        useEmailForm({
+          defaultTemplate: 'welcome',
+          defaultRecipient: 'john@example.com',
+          defaultData: { name: 'John' },
+        }),
+      { wrapper: createWrapper() },
+    );
+
+    await act(async () => {
+      await result.current.sendEmail();
+    });
+
+    expect(result.current.success).toBe(true);
+
+    act(() => {
+      result.current.reset();
+    });
+
+    expect(result.current.data).toBeNull();
+    expect(result.current.error).toBeNull();
+    expect(result.current.success).toBe(false);
+    expect(result.current.loading).toBe(false);
+    expect(result.current.formData.templateKey).toBe('welcome');
+  });
+
+  it('supports custom validate function', async () => {
+    const customValidate = vi.fn().mockReturnValue(['Custom error']);
+    const onError = vi.fn();
+
+    const { result } = renderHook(
+      () =>
+        useEmailForm({
+          defaultTemplate: 'welcome',
+          defaultRecipient: 'john@example.com',
+          defaultData: { name: 'John' },
+          validate: customValidate,
+          onError,
+        }),
+      { wrapper: createWrapper() },
+    );
+
+    expect(result.current.isValid).toBe(false);
+    expect(result.current.validationErrors).toEqual(['Custom error']);
+
+    await act(async () => {
+      await result.current.sendEmail();
+    });
+
+    expect(result.current.error?.message).toContain('Custom error');
+    expect(onError).toHaveBeenCalled();
+  });
+
+  it('setTemplateData updates only data field', () => {
+    const { result } = renderHook(
+      () => useEmailForm({ defaultTemplate: 'welcome' }),
+      { wrapper: createWrapper() },
+    );
+
+    act(() => {
+      result.current.setTemplateData({ name: 'Alice', city: 'Berlin' });
+    });
+
+    expect(result.current.formData.data).toEqual({ name: 'Alice', city: 'Berlin' });
+    expect(result.current.formData.templateKey).toBe('welcome');
   });
 });
