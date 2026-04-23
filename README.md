@@ -44,19 +44,22 @@ export default function App() {
 import { useHuefy } from '@teracrafts/huefy-react';
 
 export function WelcomeForm() {
-  const { send, loading, error, data } = useHuefy({
-    templateKey: 'welcome-email',
-    recipient: { email: 'alice@example.com', name: 'Alice' },
-    variables: { firstName: 'Alice' },
-  });
+  const { execute, loading, error, data } = useHuefy(
+    async (client) =>
+      client.sendEmail(
+        'welcome-email',
+        { firstName: 'Alice' },
+        'alice@example.com',
+      ),
+  );
 
   return (
     <div>
-      <button onClick={send} disabled={loading}>
+      <button onClick={() => execute()} disabled={loading}>
         {loading ? 'Sending…' : 'Send welcome email'}
       </button>
       {error && <p>Error: {error.message}</p>}
-      {data && <p>Sent! Message ID: {data.messageId}</p>}
+      {data && <p>Sent! ID: {data.data.emailId}</p>}
     </div>
   );
 }
@@ -65,9 +68,9 @@ export function WelcomeForm() {
 ## Key Features
 
 - **`HuefyProvider`** — shares a single `HuefyEmailClient` instance across the React tree; closes it automatically on unmount
-- **`useHuefy`** — declarative hook for sending a single email with `loading`, `error`, and `data` state
-- **`useHuefyBulk`** — hook for sending bulk emails
-- **`useHuefyClient`** — access the raw `HuefyEmailClient` for imperative use
+- **`useHuefy`** — generic action hook; pass an async function that receives the client, returns `{ execute, loading, error, data, success, reset }`
+- **`useEmailForm`** — managed form-state hook for building email send forms with validation
+- **`useHuefyContext`** — access the raw context (`client`, `isReady`, `isLoading`, `error`) for advanced use
 - **Retry with exponential backoff** — inherited from the core SDK
 - **Circuit breaker** — inherited from the core SDK; opens after 5 consecutive failures
 - **HMAC-SHA256 signing** — pass `enableRequestSigning: true` in the provider config
@@ -95,55 +98,86 @@ All configuration is passed to `HuefyProvider` as the `config` prop. It accepts 
 
 ## Hook API
 
-### `useHuefy(options)`
+### `useHuefy(actionFn, options?)`
+
+A generic hook that executes any async operation against the Huefy client.
 
 ```ts
-interface UseHuefyOptions {
-  templateKey: string
-  recipient: { email: string; name?: string }
-  variables?: Record<string, string | number | boolean>
-  provider?: 'ses' | 'sendgrid' | 'mailgun' | 'mailchimp'
-}
-
-interface UseHuefyReturn {
-  send: () => Promise<void>
+function useHuefy<T>(
+  actionFn: (client: HuefyEmailClient, ...args: unknown[]) => Promise<T>,
+  options?: {
+    onSuccess?: (data: T) => void
+    onError?: (error: Error) => void
+  }
+): {
+  execute: (...args: unknown[]) => Promise<T | undefined>
   loading: boolean
-  error: HuefyError | null
-  data: SendEmailResponse | null
+  error: Error | null
+  data: T | null
+  success: boolean
   reset: () => void
 }
 ```
 
-### `useHuefyClient()`
+### `useEmailForm(options?)`
+
+A managed form-state hook for building email send UIs.
 
 ```ts
-const client = useHuefyClient(); // returns HuefyEmailClient
+function useEmailForm(options?: {
+  defaultTemplate?: string
+  defaultData?: EmailData
+  defaultRecipient?: string
+  defaultProvider?: EmailProvider
+  validate?: (formData: EmailFormData) => string[] | null
+  onSuccess?: (response: SendEmailResponse) => void
+  onError?: (error: Error) => void
+  onSending?: () => void
+}): {
+  formData: EmailFormData
+  setFormData: (data: Partial<EmailFormData>) => void
+  setTemplateData: (data: EmailData) => void
+  sendEmail: () => Promise<SendEmailResponse | undefined>
+  reset: () => void
+  loading: boolean
+  error: Error | null
+  data: SendEmailResponse | null
+  success: boolean
+  validationErrors: string[]
+  isValid: boolean
+}
 ```
 
-Use this for one-off or imperative calls (e.g. health checks, bulk sends).
+### `useHuefyContext()`
+
+```ts
+const { client, isReady, isLoading, error } = useHuefyContext();
+```
+
+Access the raw context for advanced or imperative use.
 
 ## Error Handling
 
 ```tsx
 import { useHuefy } from '@teracrafts/huefy-react';
-import { HuefyRateLimitError, HuefyCircuitOpenError } from '@teracrafts/huefy';
+import { RateLimitError, CircuitOpenError } from '@teracrafts/huefy';
 
 function SendButton() {
-  const { send, error } = useHuefy({
-    templateKey: 'notification',
-    recipient: { email: 'user@example.com' },
-  });
+  const { execute, error } = useHuefy(
+    async (client) =>
+      client.sendEmail('notification', {}, 'user@example.com'),
+    {
+      onError: (err) => {
+        if (err instanceof RateLimitError) {
+          alert(`Rate limited. Retry after ${err.retryAfter}s`);
+        } else if (err instanceof CircuitOpenError) {
+          alert('Email service temporarily unavailable');
+        }
+      },
+    },
+  );
 
-  const handleSend = async () => {
-    await send();
-    if (error instanceof HuefyRateLimitError) {
-      alert(`Rate limited. Retry after ${error.retryAfter}s`);
-    } else if (error instanceof HuefyCircuitOpenError) {
-      alert('Email service temporarily unavailable');
-    }
-  };
-
-  return <button onClick={handleSend}>Notify</button>;
+  return <button onClick={() => execute()}>Notify</button>;
 }
 ```
 
