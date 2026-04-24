@@ -1,7 +1,7 @@
 export type EmailProvider = 'ses' | 'sendgrid' | 'mailgun' | 'mailchimp';
 
 export interface EmailData {
-  [key: string]: unknown;
+  [key: string]: string;
 }
 
 export interface SendEmailOptions {
