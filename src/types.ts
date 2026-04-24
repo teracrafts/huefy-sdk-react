@@ -31,9 +31,9 @@ export interface HuefyContextValue {
 /**
  * Options for the useHuefy hook.
  */
-export interface UseHuefyOptions {
+export interface UseHuefyOptions<T = unknown> {
   /** Callback invoked on successful action execution. */
-  onSuccess?: (data: unknown) => void;
+  onSuccess?: (data: T) => void;
   /** Callback invoked when an action fails. */
   onError?: (error: Error) => void;
 }
