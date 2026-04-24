@@ -39,7 +39,7 @@ import type { UseHuefyOptions, UseHuefyResult } from '../types';
  */
 export function useHuefy<T = unknown>(
   actionFn: (client: HuefyEmailClient, ...args: unknown[]) => Promise<T>,
-  options: UseHuefyOptions = {},
+  options: UseHuefyOptions<T> = {},
 ): UseHuefyResult<T> {
   const { client, isReady } = useHuefyContext();
 
