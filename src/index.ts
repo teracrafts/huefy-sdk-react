@@ -32,5 +32,7 @@ export type {
   BulkEmailResult,
 } from './types/email';
 
-// Email form hook
+// Email hooks
 export { useEmailForm } from './hooks/useEmailForm';
+export { useSendEmail } from './hooks/useSendEmail';
+export type { UseSendEmailOptions, UseSendEmailResult } from './hooks/useSendEmail';
