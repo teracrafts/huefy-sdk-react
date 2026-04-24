@@ -89,12 +89,12 @@ export function useEmailForm(options: UseEmailFormOptions = {}): UseEmailFormRes
     optionsRef.current.onSending?.();
 
     try {
-      const response = await client.sendEmail(
-        formData.templateKey,
-        formData.data,
-        formData.recipient,
-        formData.provider ? { provider: formData.provider } : undefined,
-      );
+      const response = await client.sendEmail({
+        templateKey: formData.templateKey,
+        data: formData.data,
+        recipient: formData.recipient,
+        provider: formData.provider,
+      });
       if (!abortRef.current) {
         setData(response);
         setSuccess(true);
