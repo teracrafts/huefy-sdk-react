@@ -67,6 +67,9 @@
     "url": "https://github.com/teracrafts/huefy-sdk.git",
     "directory": "sdks/react"
   },
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "publishConfig": {
     "access": "public"
   }

@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import type { EmailData, EmailProvider } from '@teracrafts/huefy';
+import type { EmailData, EmailProvider, SingleRecipient } from '@teracrafts/huefy';
 import { useHuefy } from './useHuefy';
 import type { SendEmailResponse } from '../types/email';
 
@@ -12,7 +12,7 @@ export interface UseSendEmailResult {
   send: (
     templateKey: string,
     data: EmailData,
-    recipient: string,
+    recipient: SingleRecipient,
     provider?: EmailProvider,
   ) => Promise<SendEmailResponse | undefined>;
   loading: boolean;
@@ -36,6 +36,11 @@ export interface UseSendEmailResult {
  * });
  *
  * await send('welcome-email', { firstName: 'Alice' }, 'alice@example.com');
+ * await send('welcome-email', { firstName: 'Alice' }, {
+ *   email: 'ops@example.com',
+ *   type: 'cc',
+ *   data: { locale: 'en' },
+ * });
  * ```
  */
 export function useSendEmail(options: UseSendEmailOptions = {}): UseSendEmailResult {
@@ -44,7 +49,7 @@ export function useSendEmail(options: UseSendEmailOptions = {}): UseSendEmailRes
       client.sendEmail({
         templateKey: templateKey as string,
         data: emailData as EmailData,
-        recipient: recipient as string,
+        recipient: recipient as SingleRecipient,
         provider: provider as EmailProvider | undefined,
       }),
     {
@@ -54,7 +59,7 @@ export function useSendEmail(options: UseSendEmailOptions = {}): UseSendEmailRes
   );
 
   const send = useCallback(
-    (templateKey: string, emailData: EmailData, recipient: string, provider?: EmailProvider) =>
+    (templateKey: string, emailData: EmailData, recipient: SingleRecipient, provider?: EmailProvider) =>
       execute(templateKey, emailData, recipient, provider) as Promise<SendEmailResponse | undefined>,
     [execute],
   );

@@ -65,6 +65,20 @@ export function WelcomeForm() {
 }
 ```
 
+For imperative sends, `useSendEmail` also accepts the richer recipient object supported by the core SDK:
+
+```tsx
+import { useSendEmail } from '@teracrafts/huefy-react';
+
+const { send } = useSendEmail();
+
+await send('welcome-email', { firstName: 'Alice' }, {
+  email: 'reviewer@example.com',
+  type: 'cc',
+  data: { locale: 'en' },
+});
+```
+
 ## Key Features
 
 - **`HuefyProvider`** — shares a single `HuefyEmailClient` instance across the React tree; closes it automatically on unmount
@@ -189,14 +203,14 @@ Set `baseUrl` in the provider config to point at a local Huefy server:
 <HuefyProvider
   config={{
     apiKey: 'sdk_local_key',
-    baseUrl: 'http://localhost:3000/api/v1/sdk',
+    baseUrl: 'https://api.huefy.on/api/v1/sdk',
   }}
 >
   {children}
 </HuefyProvider>
 ```
 
-Or set the `HUEFY_MODE=local` environment variable before starting your dev server.
+Or set `HUEFY_MODE=local` before starting your dev server to target `https://api.huefy.on/api/v1/sdk`. If you need to bypass Caddy, set `baseUrl` to `http://localhost:8080/api/v1/sdk` explicitly.
 
 ## Developer Guide
 

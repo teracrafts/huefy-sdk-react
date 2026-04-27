@@ -1,8 +1,17 @@
 export type EmailProvider = 'ses' | 'sendgrid' | 'mailgun' | 'mailchimp';
+export type RecipientType = 'to' | 'cc' | 'bcc';
 
 export interface EmailData {
-  [key: string]: string;
+  [key: string]: unknown;
 }
+
+export interface EmailRecipient {
+  email: string;
+  type?: RecipientType;
+  data?: Record<string, unknown>;
+}
+
+export type SingleRecipient = string | EmailRecipient;
 
 export interface SendEmailOptions {
   provider?: EmailProvider;
@@ -64,7 +73,7 @@ export interface UseEmailFormResult {
 
 export interface BulkRecipient {
   email: string;
-  type?: 'to' | 'cc' | 'bcc';
+  type?: RecipientType;
   data?: Record<string, unknown>;
 }
 

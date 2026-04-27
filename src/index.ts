@@ -19,6 +19,9 @@ export type {
 export type {
   EmailProvider,
   EmailData,
+  RecipientType,
+  EmailRecipient,
+  SingleRecipient,
   SendEmailOptions,
   RecipientStatus,
   SendEmailResponseData,
