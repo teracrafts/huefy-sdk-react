@@ -3,6 +3,7 @@ import { useHuefyContext } from '../context';
 import type {
   EmailFormData,
   EmailData,
+  EmailRecipient,
   SendEmailResponse,
   UseEmailFormOptions,
   UseEmailFormResult,
@@ -15,15 +16,46 @@ function defaultValidate(formData: EmailFormData): string[] | null {
   if (!formData.templateKey || formData.templateKey.trim().length === 0) {
     errors.push('Template key is required');
   }
-  if (!formData.recipient || formData.recipient.trim().length === 0) {
-    errors.push('Recipient email is required');
-  } else if (!EMAIL_REGEX.test(formData.recipient.trim())) {
-    errors.push('Invalid email address');
+  const recipientError = validateRecipient(formData.recipient);
+  if (recipientError) {
+    errors.push(recipientError);
   }
-  if (!formData.data || Object.keys(formData.data).length === 0) {
+  if (!formData.data) {
     errors.push('Template data is required');
   }
   return errors.length > 0 ? errors : null;
+}
+
+function validateRecipient(recipient: EmailFormData['recipient']): string | null {
+  if (typeof recipient === 'string') {
+    const trimmed = recipient.trim();
+    if (trimmed.length === 0) {
+      return 'Recipient email is required';
+    }
+    if (!EMAIL_REGEX.test(trimmed)) {
+      return 'Invalid email address';
+    }
+    return null;
+  }
+
+  return validateRecipientObject(recipient);
+}
+
+function validateRecipientObject(recipient: EmailRecipient): string | null {
+  const trimmedEmail = recipient.email.trim();
+  if (trimmedEmail.length === 0) {
+    return 'Recipient email is required';
+  }
+  if (!EMAIL_REGEX.test(trimmedEmail)) {
+    return 'Invalid email address';
+  }
+
+  const normalizedType = recipient.type?.trim().toLowerCase();
+  if (normalizedType && !['to', 'cc', 'bcc'].includes(normalizedType)) {
+    return 'Recipient type must be one of: to, cc, bcc';
+  }
+
+  return null;
 }
 
 export function useEmailForm(options: UseEmailFormOptions = {}): UseEmailFormResult {

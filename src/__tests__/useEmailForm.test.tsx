@@ -82,6 +82,21 @@ describe('useEmailForm', () => {
     expect(result.current.validationErrors).toHaveLength(0);
   });
 
+  it('accepts structured recipients in form state', () => {
+    const { result } = renderHook(
+      () =>
+        useEmailForm({
+          defaultTemplate: 'welcome',
+          defaultRecipient: { email: 'reviewer@example.com', type: 'CC' as 'cc' },
+          defaultData: { name: 'John' },
+        }),
+      { wrapper: createWrapper() },
+    );
+
+    expect(result.current.isValid).toBe(true);
+    expect(result.current.validationErrors).toHaveLength(0);
+  });
+
   it('sends email successfully and updates state', async () => {
     const onSuccess = vi.fn();
 

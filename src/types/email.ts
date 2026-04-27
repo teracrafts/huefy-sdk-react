@@ -42,14 +42,14 @@ export interface SendEmailResponse {
 export interface EmailFormData {
   templateKey: string;
   data: EmailData;
-  recipient: string;
+  recipient: SingleRecipient;
   provider?: EmailProvider;
 }
 
 export interface UseEmailFormOptions {
   defaultTemplate?: string;
   defaultData?: EmailData;
-  defaultRecipient?: string;
+  defaultRecipient?: SingleRecipient;
   defaultProvider?: EmailProvider;
   validate?: (formData: EmailFormData) => string[] | null;
   onSuccess?: (response: SendEmailResponse) => void;

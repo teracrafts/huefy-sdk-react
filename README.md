@@ -141,7 +141,7 @@ A managed form-state hook for building email send UIs.
 function useEmailForm(options?: {
   defaultTemplate?: string
   defaultData?: EmailData
-  defaultRecipient?: string
+  defaultRecipient?: SingleRecipient
   defaultProvider?: EmailProvider
   validate?: (formData: EmailFormData) => string[] | null
   onSuccess?: (response: SendEmailResponse) => void
