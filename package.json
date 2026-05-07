@@ -30,7 +30,7 @@
     "typecheck": "tsc --noEmit",
     "clean": "rm -rf dist",
     "prepublishOnly": "npm run build",
-    "lab": "npx tsx sdk-lab/run.ts"
+    "lab": "npm --prefix ../typescript run build && node sdk-lab/run.cjs"
   },
   "peerDependencies": {
     "react": ">=18.0.0",
