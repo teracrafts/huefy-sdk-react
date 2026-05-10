@@ -210,7 +210,7 @@ Set `baseUrl` in the provider config to point at a local Huefy server:
 </HuefyProvider>
 ```
 
-Or set `HUEFY_MODE=local` before starting your dev server to target `https://api.huefy.on/api/v1/sdk`. If you need to bypass Caddy, set `baseUrl` to `http://localhost:8080/api/v1/sdk` explicitly.
+Or set `HUEFY_MODE=local` before starting your dev server to target `https://api.huefy.on/api/v1/sdk`. If you need to bypass Caddy, set `baseUrl` to `http://localhost:3140/api/v1/sdk` explicitly.
 
 ## Developer Guide
 
