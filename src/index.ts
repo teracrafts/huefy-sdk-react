@@ -7,6 +7,23 @@ export { useHuefy } from './hooks';
 // Context
 export { useHuefyContext, getOrCreateContext } from './context';
 
+// Core SDK errors
+export {
+  HuefyError,
+  ErrorCode,
+  HuefyDomainError,
+  AuthenticationError,
+  TemplateNotFoundError,
+  InvalidTemplateDataError,
+  InvalidRecipientError,
+  ProviderError,
+  RateLimitError,
+  InsufficientQuotaError,
+  HuefyErrorCode,
+  createHuefyErrorFromResponse,
+  isHuefyDomainError,
+} from '@teracrafts/huefy';
+
 // Types
 export type {
   HuefyProviderProps,

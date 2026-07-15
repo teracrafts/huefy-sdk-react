@@ -2,6 +2,7 @@ import React from 'react';
 import { renderHook, act, waitFor } from '@testing-library/react';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { useHuefy } from '../hooks/useHuefy';
+import { HuefyErrorCode, InsufficientQuotaError } from '../index';
 import { getOrCreateContext } from '../context';
 import type { HuefyContextValue } from '../types';
 
@@ -111,6 +112,32 @@ describe('useHuefy', () => {
     expect(result.current.success).toBe(false);
     expect(result.current.loading).toBe(false);
     expect(result.current.data).toBeNull();
+    expect(onError).toHaveBeenCalledWith(actionError);
+  });
+
+  it('should preserve quota exhaustion errors from the core SDK', async () => {
+    const actionError = new InsufficientQuotaError('Monthly email quota exceeded', {
+      limit: 1000,
+      used: 1000,
+    });
+    const actionFn = vi.fn().mockRejectedValue(actionError);
+    const onError = vi.fn();
+
+    const { result } = renderHook(
+      () => useHuefy(actionFn, { onError }),
+      { wrapper: createWrapper() },
+    );
+
+    await act(async () => {
+      await result.current.execute();
+    });
+
+    expect(result.current.error).toBe(actionError);
+    expect(result.current.error).toBeInstanceOf(InsufficientQuotaError);
+    expect((result.current.error as InsufficientQuotaError).code).toBe(
+      HuefyErrorCode.INSUFFICIENT_QUOTA,
+    );
+    expect((result.current.error as InsufficientQuotaError).statusCode).toBe(402);
     expect(onError).toHaveBeenCalledWith(actionError);
   });
 

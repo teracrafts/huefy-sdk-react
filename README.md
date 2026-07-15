@@ -173,8 +173,12 @@ Access the raw context for advanced or imperative use.
 ## Error Handling
 
 ```tsx
-import { useHuefy } from '@teracrafts/huefy-react';
-import { RateLimitError, CircuitOpenError } from '@teracrafts/huefy';
+import {
+  CircuitOpenError,
+  InsufficientQuotaError,
+  RateLimitError,
+  useHuefy,
+} from '@teracrafts/huefy-react';
 
 function SendButton() {
   const { execute, error } = useHuefy(
@@ -184,6 +188,8 @@ function SendButton() {
       onError: (err) => {
         if (err instanceof RateLimitError) {
           alert(`Rate limited. Retry after ${err.retryAfter}s`);
+        } else if (err instanceof InsufficientQuotaError) {
+          alert('Quota exhausted. Upgrade or wait for the next billing period');
         } else if (err instanceof CircuitOpenError) {
           alert('Email service temporarily unavailable');
         }
